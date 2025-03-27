@@ -88,7 +88,7 @@ module "bastion" {
   vpc_id      = local.vpc_id
 
   # Use custom_ingress_rules for custom objects.
-  custom_ingress_rules = [
+  ingress_cidr_rules  = [
     local.sg_rules.bastion_ssh
   ]
 
