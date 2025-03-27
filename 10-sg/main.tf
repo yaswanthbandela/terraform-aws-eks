@@ -28,7 +28,7 @@ module "ingress" {
   vpc_id      = local.vpc_id
 
   # Use built-in ingress rule aliases. The module v5.3.0 now expects ingress_rules as a list of strings.
-  ingress_rules = ["https", "http"]
+  ingress_rules = ["https-443-tcp", "http-80-tcp"]
 
   tags = merge(
     var.common_tags,
@@ -63,7 +63,7 @@ module "node" {
   description = "SG for EKS Node"
   vpc_id      = local.vpc_id
 
-  ingress_rules = ["ssh"]
+  ingress_rules = ["ssh-22-tcp"]
 
   ingress_with_source_security_group_id = [
     local.sg_rules.node_from_cluster,
@@ -84,7 +84,7 @@ module "bastion" {
   description = "SG for Bastion Instances"
   vpc_id      = local.vpc_id
 
-  ingress_rules = ["ssh"]
+  ingress_rules = ["ssh-22-tcp"]
 
   tags = merge(
     var.common_tags,
@@ -93,14 +93,11 @@ module "bastion" {
 }
 
 module "vpn" {
-  source  = "terraform-aws-modules/security-group/aws"
-  version = "5.3.0"
-
-  name        = "${local.base_name}-vpn"
-  description = "SG for VPN Instances"
-  vpc_id      = local.vpc_id
-
-  ingress_rules = ["ssh"]  # or any supported aliases if applicable
+  source                = "terraform-aws-modules/security-group/aws"
+  version               = "5.3.0"
+  name                  = "${local.base_name}-vpn"
+  description           = "SG for VPN Instances"
+  vpc_id                = local.vpc_id
 
   tags = merge(
     var.common_tags,
