@@ -1,5 +1,5 @@
 variable "project_name" {
-  default = "expense"
+  default = "mtap"
 }
 
 variable "environment" {
@@ -8,7 +8,7 @@ variable "environment" {
 
 variable "common_tags" {
   default = {
-    Project = "expense"
+    Project = "mtap"
     Environment = "dev"
     Terraform = "true"
     Component = "ingress-alb"
@@ -16,9 +16,9 @@ variable "common_tags" {
 }
 
 variable "zone_name" {
-  default = "daws78s.online"
+  default = "homelabs.me"
 }
 
 variable "zone_id" {
-  default = "Z08884492QFPW45HM4UQO"
+  default = "Z04736861DD64PA443FY9"
 }
