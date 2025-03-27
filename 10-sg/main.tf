@@ -84,10 +84,7 @@ module "bastion" {
   description = "SG for Bastion Instances"
   vpc_id      = local.vpc_id
 
-  # Use custom_ingress_rules for custom objects.
-  ingress_cidr_rules  = [
-    local.sg_rules.bastion_ssh
-  ]
+  ingress_rules = ["ssh"]
 
   tags = merge(
     var.common_tags,
