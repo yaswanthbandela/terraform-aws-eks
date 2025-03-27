@@ -104,7 +104,7 @@ module "vpn" {
   vpc_id      = local.vpc_id
 
   # For VPN rules defined as objects, pass them via custom_ingress_rules.
-  custom_ingress_rules = var.vpn_sg_rules
+  ingress_cidr_rules = var.vpn_sg_rules
 
   tags = merge(
     var.common_tags,
