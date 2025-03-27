@@ -1,5 +1,5 @@
 variable "project_name" {
-  default = "expense"
+  default = "mtap"
 }
 
 variable "environment" {
@@ -8,12 +8,12 @@ variable "environment" {
 
 variable "common_tags" {
   default = {
-    Project = "expense"
+    Project = "mtap"
     Environment = "dev"
     Terraform = "true"
   }
 }
 
-variable "zone_name" {
-  default = "daws78s.online"
-}
+# variable "zone_name" {
+#   default = "db.mtapnfc.com"
+# }

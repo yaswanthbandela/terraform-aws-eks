@@ -1,6 +1,6 @@
 module "db" {
   source = "terraform-aws-modules/rds/aws"
-  identifier = "${var.project_name}-${var.environment}" #expense-dev
+  identifier = "${var.project_name}-${var.environment}" #mtap-dev
 
   engine            = "mysql"
   engine_version    = "8.0"
@@ -30,7 +30,7 @@ module "db" {
   )
 
   manage_master_user_password = false
-  password = "ExpenseApp1"
+  password = "IndiaApp@123"
   skip_final_snapshot = true
 
   parameters = [
@@ -65,21 +65,21 @@ module "db" {
 
 # create R53 record for RDS endpoint
 
-module "records" {
-  source  = "terraform-aws-modules/route53/aws//modules/records"
-  version = "~> 2.0"
+# module "records" {
+#   source  = "terraform-aws-modules/route53/aws//modules/records"
+#   version = "~> 2.0"
 
-  zone_name = var.zone_name
+#   zone_name = var.zone_name
   
-  records = [
-    {
-      name    = "db-${var.environment}"
-      type    = "CNAME"
-      ttl = 1
-      allow_overwrite = true
-      records = [
-        module.db.db_instance_address
-      ]
-    }
-  ]
-}
+#   records = [
+#     {
+#       name    = "db-${var.environment}"
+#       type    = "CNAME"
+#       ttl = 1
+#       allow_overwrite = true
+#       records = [
+#         module.db.db_instance_address
+#       ]
+#     }
+#   ]
+# }
