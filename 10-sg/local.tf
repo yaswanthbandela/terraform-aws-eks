@@ -19,20 +19,19 @@ locals {
       protocol                 = "tcp"
       source_security_group_id = module.node.security_group_id
     },
-    # Note: For the Ingress module we’ll use built‑in rules, so these are not used.
     ingress_https = {
       description = "Allow HTTPS"
       from_port   = 443
       to_port     = 443
       protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = "0.0.0.0/0"
     },
     ingress_http = {
       description = "Allow HTTP"
       from_port   = 80
       to_port     = 80
       protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = "0.0.0.0/0"
     },
     cluster_from_node = {
       description              = "Allow control plane traffic from nodes"
@@ -53,7 +52,7 @@ locals {
       from_port   = 0
       to_port     = 65535
       protocol    = "-1"
-      cidr_blocks = ["10.0.0.0/16"]
+      cidr_blocks = "10.0.0.0/16"
     },
     node_from_cluster = {
       description              = "Allow traffic from cluster"
@@ -74,7 +73,7 @@ locals {
       from_port   = 22
       to_port     = 22
       protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = "0.0.0.0/0"
     }
   }
 }
@@ -86,28 +85,28 @@ locals {
       from_port   = 943
       to_port     = 943
       protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = "0.0.0.0/0"
     },
     {
       name        = "vpn_tcp_443"
       from_port   = 443
       to_port     = 443
       protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = "0.0.0.0/0"
     },
     {
       name        = "vpn_udp_1194"
       from_port   = 1194
       to_port     = 1194
       protocol    = "udp"
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = "0.0.0.0/0"
     },
     {
       name        = "vpn_ssh"
       from_port   = 22
       to_port     = 22
       protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = "0.0.0.0/0"
     }
   ]
 }
