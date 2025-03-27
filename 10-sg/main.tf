@@ -1,3 +1,4 @@
+
 module "db" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.3.0"
@@ -6,6 +7,7 @@ module "db" {
   description = "SG for DB MySQL Instances"
   vpc_id      = local.vpc_id
 
+  # For rules that reference other SGs, continue using ingress_with_source_security_group_id.
   ingress_with_source_security_group_id = [
     local.sg_rules.db_bastion,
     local.sg_rules.db_node
@@ -17,7 +19,6 @@ module "db" {
   )
 }
 
-
 module "ingress" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.3.0"
@@ -26,10 +27,8 @@ module "ingress" {
   description = "SG for Ingress Controller"
   vpc_id      = local.vpc_id
 
-  ingress_rules = [
-    local.sg_rules.ingress_https,
-    local.sg_rules.ingress_http
-  ]
+  # Use built-in ingress rule aliases. The module v5.3.0 now expects ingress_rules as a list of strings.
+  ingress_rules = ["https", "http"]
 
   tags = merge(
     var.common_tags,
@@ -56,7 +55,6 @@ module "cluster" {
   )
 }
 
-
 module "node" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.3.0"
@@ -65,9 +63,8 @@ module "node" {
   description = "SG for EKS Node"
   vpc_id      = local.vpc_id
 
-  # Ingress rules from VPC CIDR and from the cluster or ingress SG can be added either
-  # via the module's ingress_rules or via separate aws_security_group_rule resources.
-  ingress_rules = [
+  # For custom rule objects, use custom_ingress_rules.
+  custom_ingress_rules = [
     local.sg_rules.node_vpc
   ]
 
@@ -82,7 +79,6 @@ module "node" {
   )
 }
 
-
 module "bastion" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.3.0"
@@ -91,7 +87,8 @@ module "bastion" {
   description = "SG for Bastion Instances"
   vpc_id      = local.vpc_id
 
-  ingress_rules = [
+  # Use custom_ingress_rules for custom objects.
+  custom_ingress_rules = [
     local.sg_rules.bastion_ssh
   ]
 
@@ -101,7 +98,6 @@ module "bastion" {
   )
 }
 
-
 module "vpn" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.3.0"
@@ -110,7 +106,8 @@ module "vpn" {
   description = "SG for VPN Instances"
   vpc_id      = local.vpc_id
 
-  ingress_rules = var.vpn_sg_rules
+  # For VPN rules defined as objects, pass them via custom_ingress_rules.
+  custom_ingress_rules = var.vpn_sg_rules
 
   tags = merge(
     var.common_tags,

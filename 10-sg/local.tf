@@ -2,7 +2,8 @@ locals {
   base_name = "${var.project_name}-${var.environment}"
   vpc_id    = data.aws_ssm_parameter.vpc_id.value
 
-  # A common map of security group rules
+  # A common map of security group rules for custom definitions.
+  # These rules will be passed via the custom_ingress_rules or ingress_with_source_security_group_id variables.
   sg_rules = {
     db_bastion = {
       description              = "Allow DB access from bastion"
@@ -18,6 +19,7 @@ locals {
       protocol                 = "tcp"
       source_security_group_id = module.node.security_group_id
     },
+    # Note: For the Ingress module we’ll use built‑in rules, so these are not used.
     ingress_https = {
       description = "Allow HTTPS"
       from_port   = 443
