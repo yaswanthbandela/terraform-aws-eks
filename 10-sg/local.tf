@@ -78,3 +78,29 @@ locals {
     }
   }
 }
+
+locals {
+  vpn_rules = [
+    {
+      name        = "vpn_tcp_943"
+      from_port   = 943
+      to_port     = 943
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    {
+      name        = "vpn_tcp_443"
+      from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    {
+      name        = "vpn_udp_1194"
+      from_port   = 1194
+      to_port     = 1194
+      protocol    = "udp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  ]
+}

@@ -103,11 +103,20 @@ module "vpn" {
   description = "SG for VPN Instances"
   vpc_id      = local.vpc_id
 
-  # For VPN rules defined as objects, pass them via custom_ingress_rules.
-  ingress_cidr_rules = var.vpn_sg_rules
+  ingress_rules = ["ssh"]  # or any supported aliases if applicable
 
   tags = merge(
     var.common_tags,
     { Name = "${local.base_name}-vpn" }
   )
+}
+
+resource "aws_security_group_rule" "vpn_custom" {
+  for_each = { for rule in local.vpn_rules : rule.name => rule }
+  type              = "ingress"
+  from_port         = each.value.from_port
+  to_port           = each.value.to_port
+  protocol          = each.value.protocol
+  cidr_blocks       = each.value.cidr_blocks
+  security_group_id = module.vpn.security_group_id
 }
