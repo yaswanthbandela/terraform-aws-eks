@@ -21,15 +21,16 @@ resource "aws_lb_listener" "http" {
   protocol          = "HTTP"
 
   default_action {
-    type = "fixed-response"
+    type = "redirect"
 
-    fixed_response {
-      content_type = "text/html"
-      message_body = "<h1>This is fixed response from Web ALB</h1>"
-      status_code  = "200"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
     }
   }
 }
+
 
 resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.ingress_alb.arn
@@ -52,13 +53,13 @@ resource "aws_lb_listener" "https" {
 
 resource "aws_lb_target_group" "frontend" {
   name     = "${var.project_name}-${var.environment}-frontend"
-  port     = 8080
+  port     = 80
   protocol = "HTTP"
   target_type = "ip"
   vpc_id   = data.aws_ssm_parameter.vpc_id.value
   health_check {
     path                = "/"
-    port                = 8080
+    port                = 80
     protocol            = "HTTP"
     healthy_threshold   = 2
     unhealthy_threshold = 2
@@ -77,8 +78,8 @@ resource "aws_lb_listener_rule" "frontend" {
 
   condition {
     host_header {
-      # expense-dev.daws78s.online --> frontend pod
-      values = ["expense-${var.environment}.${var.zone_name}"]
+      # dev.homelabs.me --> frontend pod
+      values = ["${var.environment}.${var.zone_name}"]
     }
   }
 }
@@ -94,7 +95,7 @@ module "records" {
   
   records = [
     {
-      name    = "expense-${var.environment}"
+      name    = "${var.environment}"
       type    = "A"
       allow_overwrite = true
       alias   = {
