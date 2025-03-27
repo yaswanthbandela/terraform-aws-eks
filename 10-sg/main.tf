@@ -64,7 +64,7 @@ module "node" {
   vpc_id      = local.vpc_id
 
   # For custom rule objects, use custom_ingress_rules.
-  custom_ingress_rules = [
+  ingress_cidr_rules  = [
     local.sg_rules.node_vpc
   ]
 
