@@ -63,10 +63,7 @@ module "node" {
   description = "SG for EKS Node"
   vpc_id      = local.vpc_id
 
-  # For custom rule objects, use custom_ingress_rules.
-  ingress_cidr_rules  = [
-    local.sg_rules.node_vpc
-  ]
+  ingress_rules = ["ssh"]
 
   ingress_with_source_security_group_id = [
     local.sg_rules.node_from_cluster,
