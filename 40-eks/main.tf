@@ -71,3 +71,4 @@ module "eks" {
 
   tags = var.common_tags
 }
+}
