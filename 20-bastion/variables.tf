@@ -13,3 +13,6 @@ variable "common_tags" {
     Terraform = "true"
   }
 }
+variable "bastion_ssh_key" {
+  default = "bastion-ssh-key"  # Change this to your actual SSH key name in AWS
+}
