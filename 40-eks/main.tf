@@ -1,10 +1,10 @@
-resource "aws_key_pair" "eks" {
-  key_name   = "eks"
-  # you can paste the public key directly like this
-  #public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL6ONJth+DzeXbU3oGATxjVmoRjPepdl7sBuPzzQT2Nc sivak@BOOK-I6CR3LQ85Q"
-  public_key = file("~/.ssh/eks.pub")
-  # ~ means windows home directory
-}
+# resource "aws_key_pair" "eks" {
+#   key_name   = "eks"
+#   # you can paste the public key directly like this
+#   #public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL6ONJth+DzeXbU3oGATxjVmoRjPepdl7sBuPzzQT2Nc sivak@BOOK-I6CR3LQ85Q"
+#   public_key = file("~/.ssh/eks.pub")
+#   # ~ means windows home directory
+# }
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
@@ -37,7 +37,8 @@ module "eks" {
 
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {
-    instance_types = ["m6i.large", "m5.large", "m5n.large", "m5zn.large"]
+    # instance_types = ["m6i.large", "m5.large", "m5n.large", "m5zn.large"]
+    instance_types = ["t3.medium"]
   }
 
   eks_managed_node_groups = {
@@ -55,9 +56,9 @@ module "eks" {
     #   key_name = aws_key_pair.eks.key_name
     # }
     green = {
-      min_size      = 2
-      max_size      = 10
-      desired_size  = 2
+      min_size      = 1
+      max_size      = 5
+      desired_size  = 1
       capacity_type = "SPOT"
       iam_role_additional_policies = {
         AmazonEBSCSIDriverPolicy          = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
@@ -65,8 +66,7 @@ module "eks" {
         ElasticLoadBalancingFullAccess = "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess"
       }
       # EKS takes AWS Linux 2 as it's OS to the nodes
-      key_name = aws_key_pair.eks.key_name
-    }
+      key_name = var.eks_ssh_key
   }
 
   tags = var.common_tags
