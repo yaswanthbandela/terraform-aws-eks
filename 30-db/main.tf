@@ -30,7 +30,7 @@ module "db" {
   )
 
   manage_master_user_password = false
-  password = "IndiaApp@123"
+  password = "IndiaApp#123"
   skip_final_snapshot = true
 
   parameters = [
