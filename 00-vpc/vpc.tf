@@ -17,5 +17,16 @@ module "vpc" {
   enable_nat_gateway   = true
   single_nat_gateway   = true
 
+
+    # ===== NEW: Add these tags for ALB auto-discovery =====
+  public_subnet_tags = {
+    "kubernetes.io/role/elb" = "1"  # Required for public ALBs
+    "kubernetes.io/cluster/${var.project_name}-${var.environment}" = "shared"  # Optional but recommended
+  }
+
+  private_subnet_tags = {
+    "kubernetes.io/role/internal-elb" = "1"  # For internal ALBs (if needed later)
+  }
+  
   tags = var.common_tags
 }

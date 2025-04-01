@@ -14,6 +14,6 @@ variable "common_tags" {
   }
 }
 
-# variable "zone_name" {
-#   default = "db.mtapnfc.com"
-# }
+variable "zone_name" {
+  default = "homelabs.me"
+}

@@ -14,6 +14,7 @@ module "db" {
     local.sg_rules.db_node
   ]
 
+  egress_with_cidr_blocks = local.allow_all_egress
   tags = merge(
     var.common_tags,
     { Name = "${local.base_name}-db" }
@@ -35,6 +36,7 @@ module "ingress" {
     local.sg_rules.ingress_http,
     local.sg_rules.ingress_https
   ]
+  egress_with_cidr_blocks = local.allow_all_egress
 
   tags = merge(
     var.common_tags,
@@ -57,6 +59,7 @@ module "cluster" {
     local.sg_rules.cluster_from_node,
     local.sg_rules.cluster_from_bastion
   ]
+  egress_with_cidr_blocks = local.allow_all_egress
 
   tags = merge(
     var.common_tags,
@@ -91,6 +94,7 @@ module "node" {
       description              = "NodePort range from ingress"
     }
   ]
+  egress_with_cidr_blocks = local.allow_all_egress
 
   tags = merge(
     var.common_tags,
@@ -111,6 +115,7 @@ module "bastion" {
   ingress_with_cidr_blocks = [
     local.sg_rules.bastion_ssh
   ]
+  egress_with_cidr_blocks = local.allow_all_egress
 
   tags = merge(
     var.common_tags,
@@ -131,6 +136,7 @@ module "vpn" {
   vpc_id      = local.vpc_id
 
   ingress_with_cidr_blocks = local.vpn_rules
+  egress_with_cidr_blocks = local.allow_all_egress
 
   tags = merge(
     var.common_tags,

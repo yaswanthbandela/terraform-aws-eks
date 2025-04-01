@@ -11,6 +11,9 @@ module "bastion" {
   key_name               = var.bastion_ssh_key  # Use SSH key for authentication
   user_data              = file("bastion.sh")
 
+  iam_instance_profile = aws_iam_instance_profile.bastion_profile.name
+  associate_public_ip_address = true
+
   tags = merge(
     var.common_tags,
     {
