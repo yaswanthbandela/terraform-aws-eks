@@ -1,6 +1,6 @@
 # VPC Module - Terraform Backend Setup
 
-![Architecture Diagram of VPC](image-name.png)
+![Architecture Diagram of VPC](vpc-mtap.drawio.png)
 
 ## Prerequisites
 
