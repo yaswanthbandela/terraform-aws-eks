@@ -1,5 +1,5 @@
 # SG Rules
 
-# Expense Architecture
+# Architecture Diagram
 
 ![alt text](sg-rules.svg)
