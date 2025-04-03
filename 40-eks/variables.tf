@@ -24,3 +24,7 @@ variable "cluster_service_ipv4_cidr" {
 variable "eks_ssh_key" {
   default = "eks-worker-ssh-key"  # Change this to an actual key name in AWS
 }
+
+variable "region" {
+  default = "us-east-1"
+}

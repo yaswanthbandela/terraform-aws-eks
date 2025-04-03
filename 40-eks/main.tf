@@ -18,7 +18,8 @@ module "eks" {
 
   # Access configuration
   enable_cluster_creator_admin_permissions = true
-  enable_cluster_oidc_issuer_url = true
+
+  enable_irsa = true
 
   cluster_addons = {
     coredns                = {}
@@ -50,20 +51,20 @@ module "eks" {
   tags = var.common_tags
 }
 
-# Add after EKS module
-resource "helm_release" "secrets_csi" {
-  name       = "secrets-csi"
-  repository = "https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts"
-  chart      = "secrets-store-csi-driver"
-  namespace  = "kube-system"
+# # Add after EKS module
+# resource "helm_release" "secrets_csi" {
+#   name       = "secrets-csi"
+#   repository = "https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts"
+#   chart      = "secrets-store-csi-driver"
+#   namespace  = "kube-system"
 
-  set {
-    name  = "syncSecret.enabled"
-    value = "true"  # Syncs secrets to Kubernetes Secrets
-  }
-}
+#   set {
+#     name  = "syncSecret.enabled"
+#     value = "true"  # Syncs secrets to Kubernetes Secrets
+#   }
+# }
 
-# Add IAM policy
+# # Add IAM policy
 resource "aws_iam_policy" "secrets_access" {
   name        = "secrets-access"
   description = "Allow Secrets Manager access"

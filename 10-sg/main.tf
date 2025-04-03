@@ -86,13 +86,7 @@ module "node" {
 
   ingress_with_source_security_group_id = [
     local.sg_rules.node_from_cluster,
-    {
-      from_port                = 30000
-      to_port                  = 32768
-      protocol                 = "tcp"
-      source_security_group_id = module.ingress.security_group_id
-      description              = "NodePort range from ingress"
-    }
+    local.sg_rules.node_from_ingress
   ]
   egress_with_cidr_blocks = local.allow_all_egress
 

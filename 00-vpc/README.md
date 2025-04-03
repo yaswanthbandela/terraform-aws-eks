@@ -1,5 +1,7 @@
 # VPC Module - Terraform Backend Setup
 
+![Image Description](00-vpc/image-name.png)
+
 ## Prerequisites
 Ensure you have the AWS CLI installed and configured with the necessary permissions.
 

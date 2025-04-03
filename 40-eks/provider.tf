@@ -4,6 +4,7 @@ terraform {
       source = "hashicorp/aws"
       version = "5.92.0"
     }
+
   }
   backend "s3" {
     bucket         = "mtap-remote-state"
