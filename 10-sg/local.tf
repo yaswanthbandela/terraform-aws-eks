@@ -63,9 +63,9 @@ locals {
     },
     node_from_ingress = {
       description              = "Allow node traffic from ingress"
-      from_port                = 30000
-      to_port                  = 32768
-      protocol                 = "tcp"
+      from_port                = 0
+      to_port                  = 0
+      protocol                 = "-1"
       source_security_group_id = module.ingress.security_group_id
     },
     bastion_ssh = {
