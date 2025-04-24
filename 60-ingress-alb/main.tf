@@ -67,6 +67,24 @@ resource "aws_lb_target_group" "frontend" {
   }
 }
 
+# Create a target group for the argoCD frontend service
+resource "aws_lb_target_group" "argocd" {
+  name        = "${var.project_name}-${var.environment}-argocd"
+  port        = 443
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = data.aws_ssm_parameter.vpc_id.value
+
+  health_check {
+    path                = "/"
+    port                = "443"
+    protocol            = "HTTP"
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    matcher             = "200"
+  }
+}
+
 resource "aws_lb_listener_rule" "frontend" {
   listener_arn = aws_lb_listener.https.arn
   priority     = 100 # less number will be first validated
@@ -84,6 +102,23 @@ resource "aws_lb_listener_rule" "frontend" {
   }
 }
 
+# Create a listener rule for the argocd service
+resource "aws_lb_listener_rule" "argocd" {
+  listener_arn = aws_lb_listener.https.arn
+  priority     = 101 # Ensure this doesn't conflict with existing priorities
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.argocd.arn
+  }
+
+  condition {
+    host_header {
+      values = ["argocd-${var.environment}.${var.zone_name}"]
+    }
+  }
+}
+
 
 
 
@@ -96,6 +131,26 @@ module "records" {
   records = [
     {
       name    = "${var.environment}"
+      type    = "A"
+      allow_overwrite = true
+      alias   = {
+        name    = aws_lb.ingress_alb.dns_name
+        zone_id = aws_lb.ingress_alb.zone_id
+      }
+    }
+  ]
+}
+
+# Create a Route 53 record for the argocd service
+module "argocd_records" {
+  source  = "terraform-aws-modules/route53/aws//modules/records"
+  version = "~> 2.0"
+
+  zone_name = var.zone_name
+  
+  records = [
+    {
+      name    = "argocd-${var.environment}"
       type    = "A"
       allow_overwrite = true
       alias   = {
