@@ -7,7 +7,7 @@ module "db" {
   instance_class    = "db.t3.micro"
   allocated_storage = 5
 
-  db_name  = "transactions" #default schema for expense project
+  db_name  = "mtap_dev" 
   username = "root"
   port     = "3306"
 
