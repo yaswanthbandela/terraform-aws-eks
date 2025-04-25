@@ -85,6 +85,24 @@ resource "aws_lb_target_group" "argocd" {
   }
 }
 
+# Create a target group for grafana service
+resource "aws_lb_target_group" "grafana" {
+  name        = "${var.project_name}-${var.environment}-grafana"
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = data.aws_ssm_parameter.vpc_id.value
+
+  health_check {
+    path                = "/"
+    port                = 80
+    protocol            = "HTTP"
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    matcher             = "200"
+  }
+}
+
 resource "aws_lb_listener_rule" "frontend" {
   listener_arn = aws_lb_listener.https.arn
   priority     = 100 # less number will be first validated
@@ -114,7 +132,24 @@ resource "aws_lb_listener_rule" "argocd" {
 
   condition {
     host_header {
-      values = ["argocd-${var.environment}.${var.zone_name}"]
+      values = ["argocd.${var.zone_name}"]
+    }
+  }
+}
+
+# Create a listener rule for the grafana service
+resource "aws_lb_listener_rule" "grafana" {
+  listener_arn = aws_lb_listener.https.arn
+  priority     = 102 # Ensure this doesn't conflict with existing priorities
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.grafana.arn
+  }
+
+  condition {
+    host_header {
+      values = ["grafana.${var.zone_name}"]
     }
   }
 }
@@ -150,7 +185,27 @@ module "argocd_records" {
   
   records = [
     {
-      name    = "argocd-${var.environment}"
+      name    = "argocd"
+      type    = "A"
+      allow_overwrite = true
+      alias   = {
+        name    = aws_lb.ingress_alb.dns_name
+        zone_id = aws_lb.ingress_alb.zone_id
+      }
+    }
+  ]
+}
+
+# Create a Route 53 record for the grafana service
+module "grafana_records" {
+  source  = "terraform-aws-modules/route53/aws//modules/records"
+  version = "~> 2.0"
+
+  zone_name = var.zone_name
+  
+  records = [
+    {
+      name    = "grafana"
       type    = "A"
       allow_overwrite = true
       alias   = {
