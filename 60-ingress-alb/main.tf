@@ -70,14 +70,14 @@ resource "aws_lb_target_group" "frontend" {
 # Create a target group for the argoCD frontend service
 resource "aws_lb_target_group" "argocd" {
   name        = "${var.project_name}-${var.environment}-argocd"
-  port        = 443
+  port        = 80
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = data.aws_ssm_parameter.vpc_id.value
 
   health_check {
     path                = "/"
-    port                = "443"
+    port                = "8080"
     protocol            = "HTTP"
     healthy_threshold   = 2
     unhealthy_threshold = 2
