@@ -60,3 +60,13 @@ VALIDATE $? "MySQL client installation"
 git clone https://github.com/ahmetb/kubectx /opt/kubectx
 ln -s /opt/kubectx/kubens /usr/local/bin/kubens
 VALIDATE $? "kubens installation"
+
+# Install zip
+apt install -y zip
+VALIDATE $? "zip installation"
+
+# Install AWS CLI (if not already installed)
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+VALIDATE $? "AWS CLI installation"
