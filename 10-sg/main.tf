@@ -86,7 +86,8 @@ module "node" {
 
   ingress_with_source_security_group_id = [
     local.sg_rules.node_from_cluster,
-    local.sg_rules.node_from_ingress
+    local.sg_rules.node_from_ingress,
+    local.sg_rules.node_to_node
   ]
   egress_with_cidr_blocks = local.allow_all_egress
 
