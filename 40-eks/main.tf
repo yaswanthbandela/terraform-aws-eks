@@ -25,6 +25,7 @@ module "eks" {
     coredns                = {}
     eks-pod-identity-agent = {}
     kube-proxy             = {}
+    aws-ebs-csi-driver     = {}
     vpc-cni                = {
       configuration_values = jsonencode({
           env = {
