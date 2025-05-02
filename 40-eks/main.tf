@@ -25,28 +25,37 @@ module "eks" {
     coredns                = {}
     eks-pod-identity-agent = {}
     kube-proxy             = {}
-    vpc-cni                = {}
+    vpc-cni                = {
+      configuration_values = jsonencode({
+          env = {
+            ENABLE_PREFIX_DELEGATION = "true"
+            WARM_IP_TARGET = "5"
+            MINIMUM_IP_TARGET = "10"
+          }
+        })
+    }
   }
 
   eks_managed_node_group_defaults = {
     instance_types = ["t3.medium"]
   }
 
-  # eks_managed_node_groups = {
-  #   green = {
-  #     min_size      = 2
-  #     max_size      = 5
-  #     desired_size  = 2
-  #     capacity_type = "SPOT"
-  #     iam_role_additional_policies = {
-  #       AmazonEBSCSIDriverPolicy          = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
-  #       AmazonElasticFileSystemFullAccess = "arn:aws:iam::aws:policy/AmazonElasticFileSystemFullAccess"
-  #       ElasticLoadBalancingFullAccess    = "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess"
-  #       SecretsManagerAccess = aws_iam_policy.secrets_access.arn
-  #     }
-  #     key_name = var.eks_ssh_key  # Remove if not using SSH access
-  #   }
-  # }
+  eks_managed_node_groups = {
+    green = {
+      min_size      = 1
+      max_size      = 5
+      desired_size  = 1
+      capacity_type = "SPOT"
+      bootstrap_extra_args = "--use-max-pods false --kubelet-extra-args '--max-pods=100'"
+      iam_role_additional_policies = {
+        AmazonEBSCSIDriverPolicy          = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+        AmazonElasticFileSystemFullAccess = "arn:aws:iam::aws:policy/AmazonElasticFileSystemFullAccess"
+        ElasticLoadBalancingFullAccess    = "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess"
+        SecretsManagerAccess = aws_iam_policy.secrets_access.arn
+      }
+      key_name = var.eks_ssh_key  # Remove if not using SSH access
+    }
+  }
 
   tags = var.common_tags
 }
