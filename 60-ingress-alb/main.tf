@@ -58,7 +58,7 @@ resource "aws_lb_target_group" "frontend" {
   target_type = "ip"
   vpc_id   = data.aws_ssm_parameter.vpc_id.value
   health_check {
-    path                = "/"
+    path                = "/healthz.php"
     port                = 80
     protocol            = "HTTP"
     healthy_threshold   = 2
