@@ -38,6 +38,12 @@ module "eks" {
       max_size      = 5
       desired_size  = 2
       capacity_type = "SPOT"
+      user_data = <<-EOF
+      #!/bin/bash
+      export CONTAINER_RUNTIME="containerd"
+      export USE_MAX_PODS=false
+      export KUBELET_EXTRA_ARGS="--max-pods=110"
+      EOF
       iam_role_additional_policies = {
         AmazonEBSCSIDriverPolicy          = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
         AmazonElasticFileSystemFullAccess = "arn:aws:iam::aws:policy/AmazonElasticFileSystemFullAccess"
