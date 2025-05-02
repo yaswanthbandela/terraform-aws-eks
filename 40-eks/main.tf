@@ -32,27 +32,21 @@ module "eks" {
     instance_types = ["t3.medium"]
   }
 
-  eks_managed_node_groups = {
-    green = {
-      min_size      = 2
-      max_size      = 5
-      desired_size  = 2
-      capacity_type = "SPOT"
-      user_data = <<-EOF
-      #!/bin/bash
-      export CONTAINER_RUNTIME="containerd"
-      export USE_MAX_PODS=false
-      export KUBELET_EXTRA_ARGS="--max-pods=110"
-      EOF
-      iam_role_additional_policies = {
-        AmazonEBSCSIDriverPolicy          = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
-        AmazonElasticFileSystemFullAccess = "arn:aws:iam::aws:policy/AmazonElasticFileSystemFullAccess"
-        ElasticLoadBalancingFullAccess    = "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess"
-        SecretsManagerAccess = aws_iam_policy.secrets_access.arn
-      }
-      key_name = var.eks_ssh_key  # Remove if not using SSH access
-    }
-  }
+  # eks_managed_node_groups = {
+  #   green = {
+  #     min_size      = 2
+  #     max_size      = 5
+  #     desired_size  = 2
+  #     capacity_type = "SPOT"
+  #     iam_role_additional_policies = {
+  #       AmazonEBSCSIDriverPolicy          = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+  #       AmazonElasticFileSystemFullAccess = "arn:aws:iam::aws:policy/AmazonElasticFileSystemFullAccess"
+  #       ElasticLoadBalancingFullAccess    = "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess"
+  #       SecretsManagerAccess = aws_iam_policy.secrets_access.arn
+  #     }
+  #     key_name = var.eks_ssh_key  # Remove if not using SSH access
+  #   }
+  # }
 
   tags = var.common_tags
 }
